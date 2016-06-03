@@ -23,7 +23,7 @@
     "postpublish": "npm run flow.deploy:gh-pages",
     "start": "npm run flow.serve:dev",
     "pretest": "npm run flow.lint",
-    "test": "",
+    "test": "echo 'Running tests'",
     "preversion": "npm test",
     "version": "npm run flow.changelog && git add -A",
     "postversion": "git push origin development && git push --tags"
