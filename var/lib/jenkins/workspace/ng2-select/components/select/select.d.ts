@@ -4,6 +4,8 @@ import { OptionsBehavior } from './select-interfaces';
 export declare class SelectComponent implements OnInit {
     allowClear: boolean;
     placeholder: string;
+    idField: string;
+    textField: string;
     initData: Array<any>;
     multiple: boolean;
     items: Array<any>;

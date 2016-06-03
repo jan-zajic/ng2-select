@@ -69,15 +69,18 @@ webpackJsonp([2],{
 	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 	};
 	var core_1 = __webpack_require__(1);
-	var select_item_1 = __webpack_require__(140);
-	var select_pipes_1 = __webpack_require__(141);
+	var select_item_1 = __webpack_require__(142);
+	var select_pipes_1 = __webpack_require__(143);
 	var common_1 = __webpack_require__(46);
-	var off_click_1 = __webpack_require__(139);
-	var optionsTemplate = "\n    <ul *ngIf=\"optionsOpened && options && options.length > 0 && !firstItemHasChildren\"\n        class=\"ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu\">\n      <li class=\"ui-select-choices-group\">\n        <div *ngFor=\"let o of options\"\n             class=\"ui-select-choices-row\"\n             [class.active]=\"isActive(o)\"\n             (mouseenter)=\"selectActive(o)\"\n             (click)=\"selectMatch(o, $event)\">\n          <a href=\"javascript:void(0)\" class=\"ui-select-choices-row-inner\">\n            <div [innerHtml]=\"o.text | highlight:inputValue\"></div>\n          </a>\n        </div>\n      </li>\n    </ul>\n\n    <ul *ngIf=\"optionsOpened && options && options.length > 0 && firstItemHasChildren\"\n        class=\"ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu\">\n      <li *ngFor=\"let c of options; let index=index\" class=\"ui-select-choices-group\">\n        <div class=\"divider\" *ngIf=\"index > 0\"></div>\n        <div class=\"ui-select-choices-group-label dropdown-header\">{{c.text}}</div>\n\n        <div *ngFor=\"let o of c.children\"\n             class=\"ui-select-choices-row\"\n             [class.active]=\"isActive(o)\"\n             (mouseenter)=\"selectActive(o)\"\n             (click)=\"selectMatch(o, $event)\"\n             [ngClass]=\"{'active': isActive(o)}\">\n          <a href=\"javascript:void(0)\" class=\"ui-select-choices-row-inner\">\n            <div [innerHtml]=\"o.text | highlight:inputValue\"></div>\n          </a>\n        </div>\n      </li>\n    </ul>\n";
+	var off_click_1 = __webpack_require__(141);
+	var styles = "\n.ui-select-toggle {\n  position: relative;\n\n  /* hardcoded, should use variable from bootstrap */\n  padding: 0.375rem 0.75rem;\n}\n\n/* Fix Bootstrap dropdown position when inside a input-group */\n.input-group > .dropdown {\n  /* Instead of relative */\n  position: static;\n}\n\n.ui-select-match > .btn {\n  /* Instead of center because of .btn */\n  text-align: left !important;\n}\n\n.ui-select-match > .caret {\n  position: absolute;\n  top: 45%;\n  right: 15px;\n}\n\n.ui-disabled {\n  background-color: #eceeef;\n  border-radius: 4px;\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  z-index: 5;\n  opacity: 0.6;\n  top: 0;\n  left: 0;\n  cursor: not-allowed;\n}\n\n.ui-select-choices {\n  width: 100%;\n  height: auto;\n  max-height: 200px;\n  overflow-x: hidden;\n  margin-top: 0;\n}\n\n.ui-select-multiple .ui-select-choices {\n  margin-top: 1px;\n}\n\n.ui-select-multiple {\n  height: auto;\n  padding: 3px 3px 0 3px;\n}\n\n.ui-select-multiple input.ui-select-search {\n  background-color: transparent !important; /* To prevent double background when disabled */\n  border: none;\n  outline: none;\n  height: 1.9em;\n  margin-bottom: 3px;\n\n  /* hardcoded, should use variable from bootstrap, but must be adjusted because... reasons */\n  padding: 0.375rem 0.55rem;\n}\n\n.ui-select-multiple .ui-select-match-item {\n  outline: 0;\n  margin: 0 3px 3px 0;\n}\n";
+	var optionsTemplate = "\n    <ul *ngIf=\"optionsOpened && options && options.length > 0 && !firstItemHasChildren\"\n        class=\"ui-select-choices dropdown-menu\" role=\"menu\">\n      <li *ngFor=\"let o of options\" role=\"menuitem\">\n        <div class=\"ui-select-choices-row\"\n             [class.active]=\"isActive(o)\"\n             (mouseenter)=\"selectActive(o)\"\n             (click)=\"selectMatch(o, $event)\">\n          <a href=\"javascript:void(0)\" class=\"dropdown-item\">\n            <div [innerHtml]=\"o.text | highlight:inputValue\"></div>\n          </a>\n        </div>\n      </li>\n    </ul>\n\n    <ul *ngIf=\"optionsOpened && options && options.length > 0 && firstItemHasChildren\"\n        class=\"ui-select-choices dropdown-menu\" role=\"menu\">\n      <li *ngFor=\"let c of options; let index=index\" role=\"menuitem\">\n        <div class=\"divider dropdown-divider\" *ngIf=\"index > 0\"></div>\n        <div class=\"dropdown-header\">{{c.text}}</div>\n\n        <div *ngFor=\"let o of c.children\"\n             class=\"ui-select-choices-row\"\n             [class.active]=\"isActive(o)\"\n             (mouseenter)=\"selectActive(o)\"\n             (click)=\"selectMatch(o, $event)\"\n             [ngClass]=\"{'active': isActive(o)}\">\n          <a href=\"javascript:void(0)\" class=\"dropdown-item\">\n            <div [innerHtml]=\"o.text | highlight:inputValue\"></div>\n          </a>\n        </div>\n      </li>\n    </ul>\n";
 	var SelectComponent = (function () {
 	    function SelectComponent(element) {
 	        this.allowClear = false;
 	        this.placeholder = '';
+	        this.idField = 'id';
+	        this.textField = 'text';
 	        this.initData = [];
 	        this.multiple = false;
 	        this.data = new core_1.EventEmitter();
@@ -97,8 +100,9 @@ webpackJsonp([2],{
 	    }
 	    Object.defineProperty(SelectComponent.prototype, "items", {
 	        set: function (value) {
+	            var _this = this;
 	            this._items = value;
-	            this.itemObjects = this._items.map(function (item) { return new select_item_1.SelectItem(item); });
+	            this.itemObjects = this._items.map(function (item) { return (typeof item === 'string' ? new select_item_1.SelectItem(item) : new select_item_1.SelectItem({ id: item[_this.idField], text: item[_this.textField] })); });
 	        },
 	        enumerable: true,
 	        configurable: true
@@ -180,10 +184,11 @@ webpackJsonp([2],{
 	        }
 	    };
 	    SelectComponent.prototype.ngOnInit = function () {
+	        var _this = this;
 	        this.behavior = (this.firstItemHasChildren) ?
 	            new ChildrenBehavior(this) : new GenericBehavior(this);
 	        if (this.initData) {
-	            this.active = this.initData.map(function (data) { return new select_item_1.SelectItem(data); });
+	            this.active = this.initData.map(function (data) { return (typeof data === 'string' ? new select_item_1.SelectItem(data) : new select_item_1.SelectItem({ id: data[_this.idField], text: data[_this.textField] })); });
 	            this.data.emit(this.active);
 	        }
 	    };
@@ -329,6 +334,14 @@ webpackJsonp([2],{
 	    ], SelectComponent.prototype, "placeholder", void 0);
 	    __decorate([
 	        core_1.Input(), 
+	        __metadata('design:type', String)
+	    ], SelectComponent.prototype, "idField", void 0);
+	    __decorate([
+	        core_1.Input(), 
+	        __metadata('design:type', String)
+	    ], SelectComponent.prototype, "textField", void 0);
+	    __decorate([
+	        core_1.Input(), 
 	        __metadata('design:type', Array)
 	    ], SelectComponent.prototype, "initData", void 0);
 	    __decorate([
@@ -366,7 +379,8 @@ webpackJsonp([2],{
 	            selector: 'ng-select',
 	            directives: [off_click_1.OffClickDirective],
 	            pipes: [select_pipes_1.HighlightPipe],
-	            template: "\n  <div tabindex=\"0\"\n     *ngIf=\"multiple === false\"\n     (keyup)=\"mainClick($event)\"\n     [offClick]=\"clickedOutside\"\n     class=\"ui-select-container ui-select-bootstrap dropdown open\">\n    <div [ngClass]=\"{'ui-disabled': disabled}\"></div>\n    <div class=\"ui-select-match\"\n         *ngIf=\"!inputMode\">\n      <span tabindex=\"-1\"\n          class=\"btn btn-default btn-secondary form-control ui-select-toggle\"\n          (click)=\"matchClick($event)\"\n          style=\"outline: 0;\">\n        <span *ngIf=\"active.length <= 0\" class=\"ui-select-placeholder text-muted\">{{placeholder}}</span>\n        <span *ngIf=\"active.length > 0\" class=\"ui-select-match-text pull-left\"\n              [ngClass]=\"{'ui-select-allow-clear': allowClear && active.length > 0}\"\n              [innerHTML]=\"active[0].text\"></span>\n        <i class=\"dropdown-toggle pull-right\"></i>\n        <i class=\"caret pull-right\"></i>\n        <a *ngIf=\"allowClear && active.length>0\" style=\"margin-right: 10px; padding: 0;\"\n          (click)=\"remove(activeOption)\" class=\"btn btn-xs btn-link pull-right\">\n          <i class=\"glyphicon glyphicon-remove\"></i>\n        </a>\n      </span>\n    </div>\n    <input type=\"text\" autocomplete=\"false\" tabindex=\"-1\"\n           (keydown)=\"inputEvent($event)\"\n           (keyup)=\"inputEvent($event, true)\"\n           [disabled]=\"disabled\"\n           class=\"form-control ui-select-search\"\n           *ngIf=\"inputMode\"\n           placeholder=\"{{active.length <= 0 ? placeholder : ''}}\">\n      " + optionsTemplate + "\n  </div>\n\n  <div tabindex=\"0\"\n     *ngIf=\"multiple === true\"\n     (keyup)=\"mainClick($event)\"\n     (focus)=\"focusToInput('')\"\n     class=\"ui-select-container ui-select-multiple ui-select-bootstrap dropdown form-control open\">\n    <div [ngClass]=\"{'ui-disabled': disabled}\"></div>\n    <span class=\"ui-select-match\">\n        <span *ngFor=\"let a of active\">\n            <span class=\"ui-select-match-item btn btn-default btn-secondary btn-xs\"\n                  tabindex=\"-1\"\n                  type=\"button\"\n                  [ngClass]=\"{'btn-default': true}\">\n               <a class=\"close ui-select-match-close\"\n                  (click)=\"remove(a)\">&nbsp;&times;</a>\n               <span>{{a.text}}</span>\n           </span>\n        </span>\n    </span>\n    <input type=\"text\"\n           (keydown)=\"inputEvent($event)\"\n           (keyup)=\"inputEvent($event, true)\"\n           (click)=\"matchClick($event)\"\n           [disabled]=\"disabled\"\n           autocomplete=\"false\"\n           autocorrect=\"off\"\n           autocapitalize=\"off\"\n           spellcheck=\"false\"\n           class=\"ui-select-search input-xs\"\n           placeholder=\"{{active.length <= 0 ? placeholder : ''}}\"\n           role=\"combobox\">\n    " + optionsTemplate + "\n  </div>\n  "
+	            styles: [styles],
+	            template: "\n  <div tabindex=\"0\"\n     *ngIf=\"multiple === false\"\n     (keyup)=\"mainClick($event)\"\n     [offClick]=\"clickedOutside\"\n     class=\"ui-select-container dropdown open\">\n    <div [ngClass]=\"{'ui-disabled': disabled}\"></div>\n    <div class=\"ui-select-match\"\n         *ngIf=\"!inputMode\">\n      <span tabindex=\"-1\"\n          class=\"btn btn-default btn-secondary form-control ui-select-toggle\"\n          (click)=\"matchClick($event)\"\n          style=\"outline: 0;\">\n        <span *ngIf=\"active.length <= 0\" class=\"ui-select-placeholder text-muted\">{{placeholder}}</span>\n        <span *ngIf=\"active.length > 0\" class=\"ui-select-match-text pull-left\"\n              [ngClass]=\"{'ui-select-allow-clear': allowClear && active.length > 0}\"\n              [innerHTML]=\"active[0].text\"></span>\n        <i class=\"dropdown-toggle pull-right\"></i>\n        <i class=\"caret pull-right\"></i>\n        <a *ngIf=\"allowClear && active.length>0\" style=\"margin-right: 10px; padding: 0;\"\n          (click)=\"remove(activeOption)\" class=\"close pull-right\">\n          &times;\n        </a>\n      </span>\n    </div>\n    <input type=\"text\" autocomplete=\"false\" tabindex=\"-1\"\n           (keydown)=\"inputEvent($event)\"\n           (keyup)=\"inputEvent($event, true)\"\n           [disabled]=\"disabled\"\n           class=\"form-control ui-select-search\"\n           *ngIf=\"inputMode\"\n           placeholder=\"{{active.length <= 0 ? placeholder : ''}}\">\n      " + optionsTemplate + "\n  </div>\n\n  <div tabindex=\"0\"\n     *ngIf=\"multiple === true\"\n     (keyup)=\"mainClick($event)\"\n     (focus)=\"focusToInput('')\"\n     class=\"ui-select-container ui-select-multiple dropdown form-control open\">\n    <div [ngClass]=\"{'ui-disabled': disabled}\"></div>\n    <span class=\"ui-select-match\">\n        <span *ngFor=\"let a of active\">\n            <span class=\"ui-select-match-item btn btn-default btn-secondary btn-sm\"\n                  tabindex=\"-1\"\n                  type=\"button\"\n                  [ngClass]=\"{'btn-default': true}\">\n               <a class=\"close\"\n                  style=\"margin-left: 10px; padding: 0;\"\n                  (click)=\"remove(a)\">&times;</a>\n               <span>{{a.text}}</span>\n           </span>\n        </span>\n    </span>\n    <input type=\"text\"\n           (keydown)=\"inputEvent($event)\"\n           (keyup)=\"inputEvent($event, true)\"\n           (click)=\"matchClick($event)\"\n           [disabled]=\"disabled\"\n           autocomplete=\"false\"\n           autocorrect=\"off\"\n           autocapitalize=\"off\"\n           spellcheck=\"false\"\n           class=\"form-control ui-select-search\"\n           placeholder=\"{{active.length <= 0 ? placeholder : ''}}\"\n           role=\"combobox\">\n    " + optionsTemplate + "\n  </div>\n  "
 	        }), 
 	        __metadata('design:paramtypes', [core_1.ElementRef])
 	    ], SelectComponent);
@@ -456,7 +470,7 @@ webpackJsonp([2],{
 	            .filter(function (option) {
 	            return select_pipes_1.stripTags(option.text).match(query) &&
 	                (_this.actor.multiple === false ||
-	                    (_this.actor.multiple === true && _this.actor.active.indexOf(option) < 0));
+	                    (_this.actor.multiple === true && _this.actor.active.map(function (item) { return item.id; }).indexOf(option.id) < 0));
 	        });
 	        this.actor.options = options;
 	        if (this.actor.options.length > 0) {
@@ -550,7 +564,7 @@ webpackJsonp([2],{
 
 /***/ },
 
-/***/ 139:
+/***/ 141:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -600,7 +614,7 @@ webpackJsonp([2],{
 
 /***/ },
 
-/***/ 140:
+/***/ 142:
 /***/ function(module, exports) {
 
 	"use strict";
@@ -647,7 +661,7 @@ webpackJsonp([2],{
 
 /***/ },
 
-/***/ 141:
+/***/ 143:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
