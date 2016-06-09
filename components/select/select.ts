@@ -4,7 +4,14 @@ import {HighlightPipe, stripTags} from './select-pipes';
 import {OptionsBehavior} from './select-interfaces';
 import {escapeRegexp} from './common';
 import {OffClickDirective} from './off-click';
-
+/*
+import {Component, Input, Output, EventEmitter, ElementRef, OnInit} from '@angular/core';
+import {SelectItem} from 'ng2-select/components/select/select-item';
+import {HighlightPipe, stripTags} from 'ng2-select/components/select/select-pipes';
+import {OptionsBehavior} from 'ng2-select/components/select/select-interfaces';
+import {escapeRegexp} from 'ng2-select/components/select/common';
+import {OffClickDirective} from 'ng2-select/components/select/off-click';
+*/
 let styles = `
 .ui-select-toggle {
   position: relative;
@@ -218,6 +225,7 @@ export class SelectComponent implements OnInit {
 
   @Output() public data:EventEmitter<any> = new EventEmitter();
   @Output() public selected:EventEmitter<any> = new EventEmitter();
+  @Output() public created:EventEmitter<any> = new EventEmitter();
   @Output() public removed:EventEmitter<any> = new EventEmitter();
   @Output() public typed:EventEmitter<any> = new EventEmitter();
 
@@ -242,6 +250,7 @@ export class SelectComponent implements OnInit {
   public inputEvent(e:any, isUpMode:boolean = false):void {
     // tab
     if (e.keyCode === 9) {
+      this.clickedOutside();
       return;
     }
     if (isUpMode && (e.keyCode === 37 || e.keyCode === 39 || e.keyCode === 38 ||
@@ -347,20 +356,30 @@ export class SelectComponent implements OnInit {
   }
 
   public clickedOutside():void  {
-    if(this.allowNew) {
+    if(this.allowNew && this.inputValue && this.inputMode && this.options.length == 0) {
       this.createNew();
+    } else if(this.inputMode) {
+      //empty item means deselected
+      this.doEvent('selected', new SelectItem({}));
     }
     this.inputMode = false;
     this.optionsOpened = false;
+    this.inputValue = '';
   }
 
   private createNew() {
-      var source : any = {};
-      source[this.idField] = null;
-      source[this.textField] = this.inputValue;
-
+      var source : any = {text: this.inputValue};
       var newItem = new SelectItem(source);
-      this.selectMatch(newItem);
+      this.options.push(newItem);
+      if (this.multiple === true) {
+        this.active.push(newItem);
+        this.data.next(this.active);
+      }
+      if (this.multiple === false) {
+        this.active[0] = newItem;
+        this.data.next(this.active[0]);
+      }
+      this.doEvent('created', newItem);
   }
 
   public get firstItemHasChildren():boolean {
