@@ -14,6 +14,7 @@ export declare class SelectComponent implements OnInit {
     disabled: boolean;
     data: EventEmitter<any>;
     selected: EventEmitter<any>;
+    created: EventEmitter<any>;
     removed: EventEmitter<any>;
     typed: EventEmitter<any>;
     options: Array<SelectItem>;

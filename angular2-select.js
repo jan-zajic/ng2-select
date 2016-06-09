@@ -87,6 +87,7 @@ webpackJsonp([2],{
 	        this.showSearchInputInDropdown = true;
 	        this.data = new core_1.EventEmitter();
 	        this.selected = new core_1.EventEmitter();
+	        this.created = new core_1.EventEmitter();
 	        this.removed = new core_1.EventEmitter();
 	        this.typed = new core_1.EventEmitter();
 	        this.options = [];
@@ -128,6 +129,7 @@ webpackJsonp([2],{
 	    SelectComponent.prototype.inputEvent = function (e, isUpMode) {
 	        if (isUpMode === void 0) { isUpMode = false; }
 	        if (e.keyCode === 9) {
+	            this.clickedOutside();
 	            return;
 	        }
 	        if (isUpMode && (e.keyCode === 37 || e.keyCode === 39 || e.keyCode === 38 ||
@@ -222,18 +224,29 @@ webpackJsonp([2],{
 	        }
 	    };
 	    SelectComponent.prototype.clickedOutside = function () {
-	        if (this.allowNew) {
+	        if (this.allowNew && this.inputValue && this.inputMode && this.options.length == 0) {
 	            this.createNew();
+	        }
+	        else if (this.inputMode) {
+	            this.doEvent('selected', new select_item_1.SelectItem({}));
 	        }
 	        this.inputMode = false;
 	        this.optionsOpened = false;
+	        this.inputValue = '';
 	    };
 	    SelectComponent.prototype.createNew = function () {
-	        var source = {};
-	        source[this.idField] = null;
-	        source[this.textField] = this.inputValue;
+	        var source = { text: this.inputValue };
 	        var newItem = new select_item_1.SelectItem(source);
-	        this.selectMatch(newItem);
+	        this.options.push(newItem);
+	        if (this.multiple === true) {
+	            this.active.push(newItem);
+	            this.data.next(this.active);
+	        }
+	        if (this.multiple === false) {
+	            this.active[0] = newItem;
+	            this.data.next(this.active[0]);
+	        }
+	        this.doEvent('created', newItem);
 	    };
 	    Object.defineProperty(SelectComponent.prototype, "firstItemHasChildren", {
 	        get: function () {
@@ -392,6 +405,10 @@ webpackJsonp([2],{
 	        core_1.Output(), 
 	        __metadata('design:type', core_1.EventEmitter)
 	    ], SelectComponent.prototype, "selected", void 0);
+	    __decorate([
+	        core_1.Output(), 
+	        __metadata('design:type', core_1.EventEmitter)
+	    ], SelectComponent.prototype, "created", void 0);
 	    __decorate([
 	        core_1.Output(), 
 	        __metadata('design:type', core_1.EventEmitter)
