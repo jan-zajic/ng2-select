@@ -4,14 +4,7 @@ import {HighlightPipe, stripTags} from './select-pipes';
 import {OptionsBehavior} from './select-interfaces';
 import {escapeRegexp} from './common';
 import {OffClickDirective} from './off-click';
-/*
-import {Component, Input, Output, EventEmitter, ElementRef, OnInit} from '@angular/core';
-import {SelectItem} from 'ng2-select/components/select/select-item';
-import {HighlightPipe, stripTags} from 'ng2-select/components/select/select-pipes';
-import {OptionsBehavior} from 'ng2-select/components/select/select-interfaces';
-import {escapeRegexp} from 'ng2-select/components/select/common';
-import {OffClickDirective} from 'ng2-select/components/select/off-click';
-*/
+
 let styles = `
 .ui-select-toggle {
   position: relative;

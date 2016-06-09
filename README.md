@@ -60,3 +60,12 @@ Thanks for understanding!
 ### License
 
 The MIT License (see the [LICENSE](https://github.com/valor-software/ng2-select/blob/master/LICENSE) file for the full text)
+
+/*
+import {Component, Input, Output, EventEmitter, ElementRef, OnInit} from '@angular/core';
+import {SelectItem} from 'ng2-select/components/select/select-item';
+import {HighlightPipe, stripTags} from 'ng2-select/components/select/select-pipes';
+import {OptionsBehavior} from 'ng2-select/components/select/select-interfaces';
+import {escapeRegexp} from 'ng2-select/components/select/common';
+import {OffClickDirective} from 'ng2-select/components/select/off-click';
+*/
