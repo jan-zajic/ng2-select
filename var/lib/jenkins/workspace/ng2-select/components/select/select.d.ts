@@ -6,8 +6,9 @@ export declare class SelectComponent implements OnInit {
     placeholder: string;
     idField: string;
     textField: string;
-    initData: Array<any>;
+    initData: any;
     multiple: boolean;
+    showSearchInputInDropdown: boolean;
     items: Array<any>;
     disabled: boolean;
     data: EventEmitter<any>;
