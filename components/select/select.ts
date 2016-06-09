@@ -147,7 +147,7 @@ let optionsTemplate = `
            (keyup)="inputEvent($event, true)"
            [disabled]="disabled"
            class="form-control ui-select-search"
-           *ngIf="inputMode"
+           *ngIf="inputMode && showSearchInputInDropdown"
            placeholder="{{active.length <= 0 ? placeholder : ''}}">
       ${optionsTemplate}
   </div>
@@ -192,13 +192,19 @@ export class SelectComponent implements OnInit {
   @Input() public placeholder:string = '';
   @Input() public idField:string = 'id';
   @Input() public textField:string = 'text';
-  @Input() public initData:Array<any> = [];
+  @Input() public initData: any = undefined;
   @Input() public multiple:boolean = false;
+  @Input() public showSearchInputInDropdown : boolean = true;
 
   @Input()
-  public set items(value:Array<any>) {
-    this._items = value;
-    this.itemObjects = this._items.map((item:any) => (typeof item === 'string' ? new SelectItem(item) : new SelectItem({id: item[this.idField], text: item[this.textField]})));
+  public set items(value:Array<any>) {    
+	if(value) {
+		this._items = value;
+		this.itemObjects = this._items.map((item:any) => (typeof item === 'string' ? new SelectItem(item) : new SelectItem({id: item[this.idField], text: item[this.textField]})));
+	} else {
+		this._items = [];
+		this.itemObjects = [];		
+	}
   }
 
   @Input()
