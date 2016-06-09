@@ -189,6 +189,7 @@ let optionsTemplate = `
 })
 export class SelectComponent implements OnInit {
   @Input() public allowClear:boolean = false;
+  @Input() public allowNew:boolean = false;
   @Input() public placeholder:string = '';
   @Input() public idField:string = 'id';
   @Input() public textField:string = 'text';
@@ -346,8 +347,20 @@ export class SelectComponent implements OnInit {
   }
 
   public clickedOutside():void  {
+    if(this.allowNew) {
+      this.createNew();
+    }
     this.inputMode = false;
     this.optionsOpened = false;
+  }
+
+  private createNew() {
+      var source : any = {};
+      source[this.idField] = null;
+      source[this.textField] = this.inputValue;
+
+      var newItem = new SelectItem(source);
+      this.selectMatch(newItem);
   }
 
   public get firstItemHasChildren():boolean {
