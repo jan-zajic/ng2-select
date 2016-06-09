@@ -3,6 +3,7 @@ import { SelectItem } from './select-item';
 import { OptionsBehavior } from './select-interfaces';
 export declare class SelectComponent implements OnInit {
     allowClear: boolean;
+    allowNew: boolean;
     placeholder: string;
     idField: string;
     textField: string;
@@ -32,6 +33,7 @@ export declare class SelectComponent implements OnInit {
     remove(item: SelectItem): void;
     doEvent(type: string, value: any): void;
     clickedOutside(): void;
+    private createNew();
     firstItemHasChildren: boolean;
     protected matchClick(e: any): void;
     protected mainClick(event: any): void;

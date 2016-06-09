@@ -7141,6 +7141,7 @@ webpackJsonp([1],[
 	var SelectComponent = (function () {
 	    function SelectComponent(element) {
 	        this.allowClear = false;
+	        this.allowNew = false;
 	        this.placeholder = '';
 	        this.idField = 'id';
 	        this.textField = 'text';
@@ -7284,8 +7285,18 @@ webpackJsonp([1],[
 	        }
 	    };
 	    SelectComponent.prototype.clickedOutside = function () {
+	        if (this.allowNew) {
+	            this.createNew();
+	        }
 	        this.inputMode = false;
 	        this.optionsOpened = false;
+	    };
+	    SelectComponent.prototype.createNew = function () {
+	        var source = {};
+	        source[this.idField] = null;
+	        source[this.textField] = this.inputValue;
+	        var newItem = new select_item_1.SelectItem(source);
+	        this.selectMatch(newItem);
 	    };
 	    Object.defineProperty(SelectComponent.prototype, "firstItemHasChildren", {
 	        get: function () {
@@ -7398,6 +7409,10 @@ webpackJsonp([1],[
 	        core_1.Input(), 
 	        __metadata('design:type', Boolean)
 	    ], SelectComponent.prototype, "allowClear", void 0);
+	    __decorate([
+	        core_1.Input(), 
+	        __metadata('design:type', Boolean)
+	    ], SelectComponent.prototype, "allowNew", void 0);
 	    __decorate([
 	        core_1.Input(), 
 	        __metadata('design:type', String)
